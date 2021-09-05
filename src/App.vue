@@ -1,28 +1,69 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <transition-group name="slideContainer" mode="out-in">
+    <component
+      key="mainComponent"
+      @activeComponentEvent="activeComponent = $event"
+      :is="activeComponent"
+    ></component>
+    <canvas
+      key="canvas"
+      id="canvas"
+      v-show="activeComponent == 'app-celebrate'"
+    ></canvas>
+  </transition-group>
 </template>
-
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import GameCards from "./components/GameCards.vue";
+import Failure from "./components/Failure.vue";
+import Celebrate from "./components/Celebrate.vue";
 
 export default {
-  name: 'App',
+  name: "App",
+  data() {
+    return {
+      activeComponent: "app-game-cards",
+    };
+  },
   components: {
-    HelloWorld
+    appGameCards: GameCards,
+    appCelebrate: Celebrate,
+    appFailure: Failure,
+  },
+};
+</script>
+<style>
+body {
+  font-family: sans-serif;
+}
+.slideContainer-enter {
+}
+.slideContainer-enter-active {
+  animation: slide-in 0.3s ease-out forwards;
+}
+.slideContainer-leave {
+}
+.slideContainer-leave-active {
+  animation: slide-out 0.3s ease-out forwards;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(-1000px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0px);
+    opacity: 1;
   }
 }
-</script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+@keyframes slide-out {
+  from {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(1000px);
+    opacity: 0;
+  }
 }
 </style>
